@@ -1,90 +1,30 @@
-# Concept 1: Long-Term Agent Memory - Starter Code
+# Exercise: Long-Term Agent Memory Management
 
-Build a finance assistant that maintains persistent client profiles using PostgreSQL and intelligent memory policies.
+**Objective**: Build a finance assistant that persists client profiles in PostgreSQL and applies intelligent memory policies to maintain relevant context over extended sessions. Your goal is to implement the core logic for a memory system that can store, update, prune, and reweight facts about a user, enabling an AI agent to provide consistent and personalized advice over time.
 
-## 🎯 Learning Objectives
+### Prerequisites
 
-- Design persistent memory schemas for AI agents
-- Implement intelligent memory update and conflict resolution
-- Create memory pruning policies with TTL and weight thresholds
-- Build dynamic reweighting based on recency, frequency, and importance
-- Generate compact memory digests for efficient context usage
+*   Familiarity with Python classes and dataclasses.
+*   Understanding of SQLAlchemy ORM for database interactions.
+*   Experience making API calls to an LLM, such as the OpenAI API.
 
-## 🏗️ What You'll Build
+### Instructions
 
-A **FinanceMemoryManager** that:
+1.  **Schema Definition**: Complete the `MemoryEntry` class by defining the database schema. Add columns for core data (topic, fact), metadata (source, timestamps), policies (TTL, weight, pinned status), and stats (frequency count). Implement helper methods to check for expiration and calculate age.
 
-- 🧠 **Stores client facts** in PostgreSQL with weights and TTL
-- 🔄 **Updates intelligently** with conflict detection and resolution
-- ✂️ **Prunes old memories** based on TTL and relevance scores
-- ⚖️ **Reweights dynamically** using recency, frequency, and importance
-- 📋 **Generates compact digests** for LLM context (≤12 items)
+2.  **Policy Configuration**: Define the `MemoryPolicy` dataclass to hold configuration settings for memory management, including Time-To-Live (TTL) rules for different topics, weighting coefficients, and digest size limits.
 
-## 📋 Requirements
+3.  **Intelligent Memory Manager**: Implement the `FinanceMemoryManager` class. Key methods include:
+    *   `canonicalize_fact`: Use the LLM to normalize raw text into consistent statements.
+    *   `detect_conflicts`: Use the LLM to find existing memories that contradict new information.
+    *   `upsert_memory`: Handle logic to insert new facts or update existing ones, resolving conflicts and duplicates.
+    *   `calculate_weight`: Compute dynamic importance scores based on recency, frequency, and pin status.
+    *   `prune_memories`: Remove expired or low-value memories to keep the context manageable.
+    *   `generate_profile_digest`: Create a summarized view of the top-weighted memories for the agent context.
 
-### Core Features
-- **Memory Schema**: Complete SQLAlchemy model with metadata fields
-- **Smart Updates**: LLM-powered fact canonicalization and conflict resolution
-- **Memory Policies**: TTL-based expiration and weight-based pruning
-- **Profile Digests**: Compact summaries for efficient LLM context
+4.  **Finance Assistant Integration**: Implement the `FinanceAssistant` class to connect the memory system with user interaction.
+    *   `_extract_facts`: Use the LLM to parse user input into structured facts.
+    *   `process_user_input`: Orchestrate the flow of extracting facts, updating memory, and running maintenance (reweighting/pruning).
+    *   `answer_question`: Retrieve relevant context from the memory digest to generate personalized answers.
 
-### Technology Stack
-- **Database**: PostgreSQL with SQLAlchemy ORM
-- **LLM**: OpenAI GPT-4 for fact processing
-- **Domain**: Personal finance assistant
-
-## 🚀 Getting Started
-
-### 1. Environment Setup
-
-```bash
-# Install dependencies
-pip install -r ../../../requirements.txt
-
-# Set up environment variables
-cp .env.template .env
-# Edit .env with your OpenAI API key and database URL
-```
-
-### 2. Complete Implementation
-
-Open `finance_memory_agent.ipynb` and complete all the **YOUR CODE HERE** sections:
-
-1. **Database Schema** - Complete the MemoryEntry model
-2. **Memory Manager** - Implement core memory operations
-3. **Finance Assistant** - Build the context-aware assistant
-4. **Testing** - Run the test scenarios
-
-### 3. Success Criteria
-
-Your implementation should demonstrate:
-- ✅ Memory persistence across sessions
-- ✅ Intelligent conflict resolution
-- ✅ Automatic memory pruning and reweighting
-- ✅ Context-aware financial advice
-- ✅ Compact profile digests (≤12 items)
-
-## 📊 Test Scenarios
-
-1. **Client Onboarding**: Store initial goals, risk tolerance, constraints
-2. **Memory Updates**: Handle conflicting information intelligently
-3. **Context Usage**: Answer questions using stored client profile
-4. **Memory Management**: Demonstrate pruning and reweighting
-
-## 🛠️ Implementation Tips
-
-1. **Start Simple**: Begin with basic CRUD before adding intelligence
-2. **Test Incrementally**: Validate each method as you build it
-3. **Use LLM Effectively**: Design clear prompts for fact extraction
-4. **Handle Edge Cases**: Account for API errors and invalid data
-5. **Focus on UX**: Provide clear feedback about memory operations
-
-## 📚 Key Concepts
-
-- **TTL (Time To Live)**: Automatic expiration of stale memories
-- **Weight Calculation**: Dynamic scoring based on recency/frequency/importance
-- **Conflict Resolution**: LLM-powered detection and resolution of contradictory facts
-- **Memory Pruning**: Intelligent removal of low-value or expired memories
-- **Profile Digests**: Compact summaries optimized for LLM context windows
-
-Good luck building your intelligent memory system! 🚀
+5.  **Testing and Validation**: Run the provided test scenarios to simulate a multi-session interaction. Verify that the agent correctly stores onboarding info, handles updates (like paying off a loan), respects TTL policies, and uses long-term context to answer financial questions effectively.

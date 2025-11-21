@@ -1,118 +1,19 @@
-# Concept 2: Evaluating AI Agents with Memory + RAG Integration
+# Exercise Solution: Evaluating AI Agents
 
-**Objective**: Evaluate the finance memory agent from Concept 1 using industry-standard agentic AI metrics with LlamaIndex RAG capabilities.
+### Solution Walkthrough
 
-## 🎯 Integration Approach
+This solution builds a production-grade evaluation framework to assess our AI agent's performance. We implement three key industry-standard metrics within a single `AgenticRAGEvaluationMetrics` class: Factual Accuracy, Citation Compliance, and Retrieval Relevance.
 
-This exercise builds upon **Concept 1** (Finance Memory Agent) by adding comprehensive evaluation capabilities:
+First, we implement the **Factual Accuracy** metric. This function uses a powerful technique called LLM-as-a-judge, where we prompt another LLM to score the agent's response against the ground truth. The key is a well-structured prompt that requests a JSON output containing the score and reasoning.
 
-- **Foundation**: Uses the finance memory agent from Concept 1 as the base system
-- **Enhancement**: Adds LlamaIndex RAG for document retrieval and indexing  
-- **Evaluation**: Implements the top 3 agentic AI metrics used in production
+Next, for regulatory and trust purposes, we evaluate **Citation Compliance**. This metric uses regular expressions to check if the agent's answer includes source citations when required. The scoring logic handles all four scenarios, such as when a citation is required and present versus when it's not required but is still provided.
 
-## 📊 Top 3 Agentic RAG Metrics
+To measure the RAG system's effectiveness, we implement **Retrieval Relevance**. This function calculates precision and recall to determine if the agent retrieved the correct documents. The F1-score provides a single, balanced measure of retrieval quality, which we scale to 100 for consistency.
 
-1. **🎯 Factual Accuracy** (40% weight)
-   - LLM-based correctness scoring against golden standard answers
-   - Critical for ensuring reliable financial advice
+With the individual metrics defined, the `evaluate_complete_response` method calculates a weighted **composite score** (40% for accuracy, 30% for citation, and 30% for retrieval), giving a holistic view of the agent's performance.
 
-2. **📝 Citation/Source Compliance** (30% weight) 
-   - Source attribution and evidence quality assessment
-   - Essential for regulatory compliance in financial services
+Finally, we run the evaluation suite. The code iterates through our golden dataset, gets a response from the agent for each question, and uses our framework to generate a detailed evaluation result. After running the evaluation, the results are collected into a DataFrame, providing a clear summary of the agent's performance on each question.
 
-3. **🔍 Retrieval Relevance** (30% weight)
-   - Quality of document retrieval using LlamaIndex
-   - Measured with precision/recall metrics
+### Key Takeaway
 
-## �️ Architecture
-
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Finance Memory │    │  LlamaIndex RAG │    │  Evaluation     │
-│  Agent (C1)     │───▶│  Document       │───▶│  Metrics        │
-│                 │    │  Retrieval      │    │  (Top 3)        │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-        │                        │                        │
-        ▼                        ▼                        ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Persistent     │    │  Banking Policy │    │  Performance    │
-│  Memory Store   │    │  Documents      │    │  Analytics      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-```
-
-## � Files Overview
-
-- **enhanced_agent_evaluation.ipynb**: Complete evaluation framework integrating Concept 1
-- **generate_golden_dataset.py**: Creates 50 labeled Q&A pairs for evaluation
-- **data/banking_qa_golden_dataset.csv**: Golden standard questions and answers
-- **data/banking_policy_documents.json**: Banking policy knowledge base
-- **requirements.txt**: Dependencies including LlamaIndex
-- **.env.template**: Environment variables setup
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Complete **Concept 1** (Finance Memory Agent)
-- OpenAI API key
-
-### Setup
-**Note**: This lesson uses the consolidated requirements.txt from the project root directory.
-
-```bash
-# Install dependencies
-pip install -r ../../../requirements.txt
-
-# Configure environment
-cp .env.template .env
-# Add your OPENAI_API_KEY to .env
-
-# Generate golden dataset (if not already done)
-python generate_golden_dataset.py
-
-# Run evaluation
-jupyter notebook enhanced_agent_evaluation.ipynb
-```
-
-## 📈 What You'll Learn
-
-1. **Production Evaluation**: Industry-standard metrics for agentic AI systems
-2. **RAG Integration**: How to combine memory with document retrieval
-3. **Performance Analysis**: Comprehensive analytics and improvement recommendations
-4. **Financial Compliance**: Citation requirements for banking applications
-5. **Memory + RAG Synergy**: Benefits of persistent memory with dynamic retrieval
-
-## 🧪 Evaluation Process
-
-1. **Memory Integration**: Import finance agent from Concept 1
-2. **RAG Setup**: Initialize LlamaIndex with banking policy documents
-3. **Golden Dataset**: Load 50 carefully crafted Q&A pairs
-4. **Metric Evaluation**: Run all three metrics on each question
-5. **Performance Analysis**: Generate insights and recommendations
-
-## � Expected Outcomes
-
-- **Composite Score**: Weighted average across all three metrics
-- **Category Analysis**: Performance breakdown by banking domain
-- **Retrieval Analytics**: Precision/recall for document retrieval
-- **Improvement Recommendations**: Actionable suggestions for optimization
-- **Token Efficiency**: Cost analysis for production deployment
-
-## 🔗 Integration Benefits
-
-By building on Concept 1, students will:
-- See how memory enhances RAG performance
-- Understand evaluation in context of complete systems
-- Learn production-ready assessment techniques
-- Experience end-to-end agentic AI development
-
-## 💡 Production Considerations
-
-This evaluation framework is designed for real-world deployment:
-- **Regulatory Compliance**: Citation tracking for financial services
-- **Cost Optimization**: Token usage monitoring and efficiency metrics
-- **A/B Testing**: Framework supports comparing different agent configurations
-- **Continuous Improvement**: Metrics can be used for ongoing optimization
-
-**Time Investment**: ~15-20 minutes (assuming Concept 1 is complete)
-**Domain**: Banking policies with persistent memory integration
-**Framework**: LlamaIndex + OpenAI + Custom evaluation metrics
+> You have successfully implemented a comprehensive, multi-metric evaluation framework to objectively measure and analyze the performance of an agentic RAG system.
